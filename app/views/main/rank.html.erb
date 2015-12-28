@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <style>
+            body{
+                background-image: url("/assets/grad_moist3.jpg");
+                background-repeat:no-repeat;
+                background-size: 100% 200%;
+            }
+
+            .navbar{
+                opacity:0.9;
+            }
+
+        </style>
+    </head>
+    <body>
+
+
+    <%= render :partial => 'main/brandMenu' %>
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center">Rank<br></h1>
+                    <p class="text-center">We are a group of skilled individuals.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="/assets/emptyuser.png" class="center-block img-circle img-responsive">
+                    <h3 class="text-center">John Doe</h3>
+                    <p class="text-center">Developer</p>
+                </div>
+
+                <div class="col-md-4">
+                    <img src="/assets/emptyuser.png" class="center-block img-circle img-responsive">
+                    <h3 class="text-center">John Doe</h3>
+                    <p class="text-center">Developer</p>
+                </div>
+
+                <div class="col-md-4">
+                    <img src="/assets/emptyuser.png" class="center-block img-circle img-responsive">
+                    <h3 class="text-center">John Doe</h3>
+                    <p class="text-center">Developer</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <%=@a%>
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped" style="background-color:white;">
+                        <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>Avg.</th>
+                                <th>총점수</th>
+                                <th>전적</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% Okdb.all.each do |t| %>
+                            <tr>
+                                <td><%=t.name %></td>
+                                <td><%=t.average%></td>
+                                <td><%=t.allscore %></td>
+                                <td><%=Scoreboard.where("winid = ?", t.id).count%>승<%=Scoreboard.where("loseid = ?", t.id).count%> 패</td>
+                            </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

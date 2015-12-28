@@ -1,0 +1,30 @@
+      <div class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-ex-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <%=link_to "OK Billiard", "/main/cover", class:"navbar-brand" %>
+            <!-- <a class="navbar-brand" href="#"><span>Brand</span></a> -->
+          </div>
+          <div class="collapse navbar-collapse" id="navbar-ex-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <%=link_to "점수판", "/main/score", class:"hidden-sm hidden-xs" %>
+              </li>
+              <li>
+                <%=link_to "Ranking", "/main/rank" %>
+              </li>
+               <li>
+                <%=link_to "Setup", "/main/setup" %>
+              </li>
+        <!--       <li>
+                <a href="" data-toggle="modal" data-target="#loginmodal">Login</a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+      </div>

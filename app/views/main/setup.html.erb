@@ -1,0 +1,136 @@
+<html>
+
+    <head>
+
+    <style>
+        body{
+                background-image: url("/assets/grad_pastel2.jpg");
+                background-repeat:no-repeat;
+                background-size: 100% 100%;
+            }
+
+        .navbar{
+                opacity:0.9;
+            }
+
+    </style>
+
+    </head>
+
+    <body>
+        <%= render :partial => 'main/brandMenu' %>
+
+
+        <div class="section">
+            <div class="container">
+                <div class="row">
+<!--   #     t.string :name
+  #     t.string :phoneNum
+  #     t.integer :point  #다마수
+  #     t.string :image
+  #     t.float :average  #총점수
+  #     t.integer :allscore   #총다마수
+  #     t.integer :count  #총경기횟수 -->
+                    <table class="table table-hover">
+                        <tr>
+                            <td>이름</td>
+                            <td>전화번호</td>
+                            <td>다마수</td>
+                            <td>Avg.</td>
+                            <td>총다마</td>
+                            <td>경기수</td>
+                            <td>사진</td>
+                        </tr>
+                    <% Okdb.all.each do |t| %>
+                        <tr>
+                            <td><%=t.name %></td>
+                            <td><%=t.phoneNum%></td>
+                            <td><%=t.point%></td>
+                            <td><%=t.average.to_f.round(2)%></td>
+                            <td><%=t.allscore%></td>
+                            <td><%=t.count%></td>
+                            <td><%=t.image%></td>
+                        </tr>
+                    <% end %>
+                    <tr class="adduser"></tr>
+                    </table>
+
+                </div>
+                <div class="row">
+                    <button type="button"  data-toggle="modal" data-target="#join" class="btn btn-primary btn-block">추가하기</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="join">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Join<br></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" enctype="multipart/form-data" method="post">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label class="control-label" for="name">이름</label>
+                                    <input class="form-control" id="name" placeholder="이름" type="text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label class="control-label" for="phone">휴대폰번호</label>
+                                    <input class="form-control" id="phone" placeholder="휴대폰번호" type="text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label class="control-label" for="point">다마수</label>
+                                    <input class="form-control" id="point" min="0" placeholder="다마수" type="number">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label class="control-label" for="photo">사진</label>
+                                    <input class="form-control" id="photo" type="file">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="_join_button" class="btn btn-default" data-dismiss="modal">작성완료</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+    $(document).on("click","#_join_button",
+    function(){
+        _name=$("#name").val();
+        _phone=$("#phone").val();
+        _photo=$("#photo").val();
+        _point=$("#point").val();
+
+        $.ajax({
+            data: { name: _name, phone:_phone, point:_point, photo:_photo},
+            url: "/main/join",
+            dataType:"json",
+            success: function(res){
+                $(".adduser").before("<tr><td>"+_name+"</td>"+"<td>"+_phone+"</td>"+"<td>"+_point+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+_photo+"</td></tr>");
+                $("#point").val("");
+                $("#name").val("");
+                $("#phone").val("");
+                $("#photo").val("");
+            }
+        });
+    }
+    );
+    </script>
+</html>

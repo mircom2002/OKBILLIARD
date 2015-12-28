@@ -1,0 +1,264 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css">
+        <style>
+            body{
+                background-image: url("/assets/grad-line.jpg");
+                background-repeat:no-repeat;
+                background-size:cover;
+            }
+
+            .section{
+                color:#ddd;
+                font-size:40px;
+            }
+
+            .navbar{
+                opacity:0.2;
+                color:white;
+            }
+
+            div{
+                margin-left:auto;
+                margin-right:auto;
+                text-align:center;
+                color:#aaa;
+            }
+
+            ._scoreboard{
+                width:80%;
+                border:1px solid #666;
+                cursor:pointer;
+                font-size:250px;
+                text-align: right;
+                padding-right:30px;
+                color:#333;
+             }
+
+
+             #turnButton{
+                width:80%;
+                cursor:pointer;
+                background-color:#333;
+                text-align: center;
+             }
+
+             table{
+                font-size:20px;
+                border:1px solid #666;
+             }
+        </style>
+    </head>
+
+    <body>
+        <div class="navTog">
+            <%= render :partial => 'main/brandMenu' %>
+        </div>
+        <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    Player1
+                </div>
+                <div class="col-md-4">
+                    <div id="inning">
+                        - Inning
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    Player2
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div id="score1" class="_scoreboard" >
+                        -
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="timer" class="_scoreboard">
+                    -
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="score2" class="_scoreboard">
+                        -
+                    </div>
+                </div>
+            </div>
+             <div class="row">
+                <div id="aver1" class="col-md-4">
+                    Average : -
+                </div>
+                <div class="col-md-4">
+                    <div id="turnButton">
+                        Turn Change
+                    </div>
+                </div>
+                <div id="aver2" class="col-md-4">
+                    Average  : -
+                </div>
+            </div>
+
+            <!-- <div class="row">
+                <table>
+                        <tr>
+                            <td>Inning</td>
+                            <% 1.upto(100) do |i| %>
+                            <td id="_table<%=i%>"><%=i%></td>
+                            <% end %>
+                        </tr>
+                        <tr>
+                            <td>Player1</td>
+                            <% 1.upto(100) do |i| %>
+                            <td id="_1p<%=i%>"></td>
+                            <% end %>
+
+                        </tr>
+                        <tr>
+                            <td>Player2</td>
+                            <% 1.upto(100) do |i| %>
+                            <td id="_2p<%=i%>"></td>
+                            <% end %>
+                        </tr>
+                </table>
+            </div> -->
+        </div>
+
+    </body>
+
+    <script>
+
+        var _score1={"point":0, "timeout":3};;
+        var _score2={"point":0, "timeout":3};;
+        var score1=$("#score1");
+        var score2=$("#score2");
+        var timer=$("#timer");
+        var inning;
+        var turnButton=$("#turnButton");
+        var playerChk;  // 0:game set 1:countDown 2:pause
+        var gameStatue=0;   // 0:game set 1:FisrtPlayer 2:SecondPlayer
+        var pausedTime;
+        var _t;
+        var ti;
+
+        function timerInit(){
+            _score1={"point":0, "timeout":3};
+            _score2={"point":0, "timeout":3};
+            inning=1;
+            pausedTime=0;
+            playerChk=1;  // 0:game set 1:First 2:Second Player
+            gameStatue=0;   // 0:game set 1:CountDown 2:Pause
+            _t=40;
+            $("div").css({color:"#fff"});
+            score2.css({color:"#333"});
+            score1.text(0);
+            score2.text(0);
+            timer.text(0);
+        }
+
+        function T(){
+            if(gameStatue==1){
+
+                timer.text(_t);
+
+                if(_t<=0) {
+                    _t=40;
+                    turnChange();
+                }else{
+                    _t--;
+                }
+            }else if(gameStatue==2){
+                if(pausedTime<=0) gameStatue=1;
+
+                timer.html(_t+'<div style="position:absolute;bottom:0px;right:50px;font-size:90px;">+'+pausedTime+'</div');
+                pausedTime--;
+            }
+        }
+
+        function turnChange(){
+            if(gameStatue>0){
+                gameStatue=1;
+                $("#score"+(playerChk%2+1)).css({color:"#fff"});
+                playerChk++;
+                $("#score"+(playerChk%2+1)).css({color:"#333"});
+                inning++;
+                _t=40;
+
+                if(playerChk%2==0){
+                    $("#aver1").text("Average : "+(_score1["point"]/parseInt((inning+1)/2)).toFixed(2));
+                }else{
+                    $("#aver2").text("Average : "+(_score2["point"]/parseInt((inning+1)/2)).toFixed(2));
+                }
+
+                $("#inning").text(parseInt((inning+1)/2)+" Inning");
+           }
+        }
+
+        turnButton.on("click", function(){
+            turnChange();
+        });
+
+        timer.on("click", function(){
+            if(gameStatue>0){
+                pausedTime=30;
+                if(playerChk%2==1){
+                    if(_score1["timeout"]>0){
+                        gameStatue=2;
+                        _score1["timeout"]--;
+                    }else{
+                        alert("Timestop Count Over");
+                    }
+                }else{
+                    if(_score2["timeout"]>0){
+                        gameStatue=2;
+                        _score2["timeout"]--;
+                    }else{
+                        alert("Timestop Count Over");
+                    }
+                }
+            }
+
+            if(gameStatue==0){
+                timerInit();
+                gameStatue=1;
+                $("#inning").text(parseInt((inning+1)/2)+" Inning");
+                ti=setInterval(T, 1000);
+            }
+        }
+        );
+
+
+        score1.on("click", function(){
+                if(playerChk%2==1){
+                    _score1["point"]++;
+                    gameStatue=1;
+                    _t=40;
+                    timer.text(40);
+                    score1.text(_score1["point"]);
+                }
+            }
+        );
+
+        score2.on("click", function(){
+                if(playerChk%2==0){
+                    gameStatue=1;
+                    _score2["point"]++;
+                    _t=40;
+                    timer.text(40);
+                    score2.text(_score2["point"]);
+                }
+            }
+        );
+
+        // $(".navTog").on("click", function(){
+        //     $(".navTog").toggle(50);
+        // });
+    </script>
+
+</html>
