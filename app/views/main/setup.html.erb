@@ -4,7 +4,7 @@
 
     <style>
         body{
-                background-image: url("/assets/grad_pastel2.jpg");
+                background-image: url("https://s3-ap-northeast-1.amazonaws.com/okphoto/background/grad_pastel2.jpg?X-Amz-Date=20151228T152006Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=d2dc7e211b892fbade4d1e91dcef4e6ac0914d444dc1dc606b5274f5c1d2f98e&X-Amz-Credential=ASIAIWLBX5EZFD5TDFEA/20151228/ap-northeast-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=AQoDYXdzEI///////////wEakALYXqdGhjZ2%2BdC9e8XQa%2BOzyyn%2BjfnVdRo%2BMFS/vW92eX2g1YjqwTS8sNRCAZRTL%2BOB9004y3zVymYEn%2BqeXu9dTxOV5h8eQs7qYkhwcVUPVy5FVICPV7VWaJ%2BG0vmcEFEzGI8pPARIc6UDt/x86veo3KbDWcS1O4HVGMpQrWb/GkkYMrVPV5fXYy72tCiRF0pT8aO3b6aJqKMU0Ard85Ufu3hcoHR7ftv35cEs6MVQonUyewOuD7VQDrU/uU/Jo2q68WL7KlrrnAnu/QhQkJ2kVIU1cofsqpJjPnX21GYUcyiILZGq/FDgdLLzHhkvRxZuyNbhPRS2Tp5GEmQKGuyMqYnHrc2WH0VHI98s13XqliCuzoS0BQ%3D%3D");
                 background-repeat:no-repeat;
                 background-size: 100% 100%;
             }
@@ -39,7 +39,6 @@
                             <td>Avg.</td>
                             <td>총다마</td>
                             <td>경기수</td>
-                            <td>사진</td>
                         </tr>
                     <% Okdb.all.each do |t| %>
                         <tr>
@@ -49,7 +48,6 @@
                             <td><%=t.average.to_f.round(2)%></td>
                             <td><%=t.allscore%></td>
                             <td><%=t.count%></td>
-                            <td><%=t.image%></td>
                         </tr>
                     <% end %>
                     <tr class="adduser"></tr>
@@ -91,14 +89,6 @@
                                     <input class="form-control" id="point" min="0" placeholder="다마수" type="number">
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <label class="control-label" for="photo">사진</label>
-                                    <input class="form-control" id="photo" type="file">
-                                </div>
-                            </div>
-
                         </div>
 
                         <div class="modal-footer">
@@ -115,19 +105,18 @@
     function(){
         _name=$("#name").val();
         _phone=$("#phone").val();
-        _photo=$("#photo").val();
         _point=$("#point").val();
 
         $.ajax({
-            data: { name: _name, phone:_phone, point:_point, photo:_photo},
+            data: { name: _name, phone:_phone, point:_point},
             url: "/main/join",
             dataType:"json",
             success: function(res){
-                $(".adduser").before("<tr><td>"+_name+"</td>"+"<td>"+_phone+"</td>"+"<td>"+_point+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+_photo+"</td></tr>");
+                $(".adduser").before("<tr><td>"+_name+"</td>"+"<td>"+_phone+"</td>"+"<td>"+_point+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"</tr>");
                 $("#point").val("");
                 $("#name").val("");
                 $("#phone").val("");
-                $("#photo").val("");
+
             }
         });
     }

@@ -130,18 +130,19 @@
                 border:1px solid grey;
                 margin:4px;
                 font-size:30px;
-                border-radius: 10px;
                 padding:4px;
                 opacity:0.5;
                 cursor:pointer;
             }
 
             .leftPlayer{
+                padding-left:20px;
                 text-align:left;
             }
 
             .rightPlayer{
                 text-align: right;
+                padding-right:20px;
             }
 
             .media-object{
@@ -189,9 +190,6 @@
                         <div class="col-md-6">
                             <div id='0' class="leftPlayer _player_box">
                                 <div class="media">
-                                  <div class="media-left media-middle">
-                                      <img class="media-object" src="/assets/emptyuser.png">
-                                  </div>
                                   <div class="media-body">
                                     <p class="media-heading">선공</p><hr class="_hr_line">
                                     <h5 class="media-heading">Name</h5>
@@ -204,6 +202,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div id='0' class="rightPlayer _player_box">
                                 <div class="media">
@@ -216,9 +215,6 @@
                                     <h5 class="media-heading">Score</h5>
                                     <h4 class="_rightScore"></h4>
                                   </div>
-                                  <div class="media-right media-middle">
-                                      <img class="media-object" src="/assets/emptyuser.png">
-                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -229,7 +225,7 @@
                         <%Okdb.all.each do |t| %>
                             <div class="col-md-2">
                                 <div id="<%=t.id%>" class="_char_box">
-                                    <%=t.name%>
+                                    &nbsp;<%=t.name%>&nbsp;
                                 </div>
                             </div>
                         <% end %>
@@ -334,6 +330,7 @@
         var timer;
         var stop=0;
         var de_color=0;
+        var gameEnd=0;
 
         function _color_change(){
             if(de_color==0){
@@ -400,48 +397,63 @@
             _t-40;
             stop=0;
             gameState=0;
+            gameEnd=0;
         }
 
+
         $(".init_btn").on("click", function(){
-
-
             if(gameState==0){   // Before Game
                 init_scoreBoard();
                 return;
             }
 
-            if(selectChar==2){  // Practice Game
+            gameEnd++;
 
+            if(gameEnd==1){
                 var tp=parseInt($("._point").eq((gameState+1)%2).text());
                 var sp=parseInt($("._score").eq((gameState+1)%2).text());
                 $("._score").eq((gameState+1)%2).text(tp+sp);
 
                 $("._score_text").eq((gameState+1)%2).text("Average : "+(parseInt($("._score").eq((gameState+1)%2).text())/parseInt((gameState+1)/2)).toFixed(2));
+                $(".init_btn").text("돌아가기");
+                stop=1;
 
-                w_id=$("._player_box").eq((gameState+1)%2).attr("id");
-                w_score=$("._score").eq((gameState+1)%2).text();
+                $("._turn").text("수고하셨습니다");
 
-                inning=parseInt((gameState+1)/2);
+                $("._score").css("opacity", 0.9);
+                $("._score_text").css("opacity", 0.9);
+                $("._score_point").css("opacity", 0.9);
 
-                l_id=$("._player_box").eq((gameState)%2).attr("id");
-                l_score=$("._score").eq((gameState)%2).text();
+                if(selectChar==2){  // Practice Game
+                    w_id=$("._player_box").eq((gameState+1)%2).attr("id");
+                    w_score=$("._score").eq((gameState+1)%2).text();
 
-                $.ajax({
-                            data: { id:w_id, score:w_score, inning:inning, lid:l_id, lscore:l_score},
-                            url: "/main/updateinfo",
-                            dataType:"json",
-                            success: function(res){
-                                //alert(res);
-                             },error:function(request,status,error){
-    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
-                        });
+                    inning=parseInt((gameState+1)/2);
 
+                    l_id=$("._player_box").eq((gameState)%2).attr("id");
+                    l_score=$("._score").eq((gameState)%2).text();
+
+                    $.ajax({
+                                data: { id:w_id, score:w_score, inning:inning, lid:l_id, lscore:l_score},
+                                url: "/main/updateinfo",
+                                dataType:"json",
+                                success: function(res){
+
+
+                                 },error:function(request,status,error){alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);}
+                            });
+                    if(gameState%2==1){
+                        $("._turn").text($("._player").eq(0).text()+"님이 승리하였습니다.");
+                    }else{
+                        $("._turn").text($("._player").eq(2).text()+"님이 승리하였습니다.");
+                    }
+                }
+
+            }else if(gameEnd>1){
+                 init_scoreBoard();
+                 $("._board").slideUp();
+                 $("._menu").slideToggle();
             }
-
-            init_scoreBoard();
-            $("._board").slideUp();
-            $("._menu").slideToggle();
-
         });
 
 
@@ -505,6 +517,10 @@
                 return;
             }
 
+            if(gameEnd==1){
+                return;
+            }
+
             if(gameState>0){
 
                 var tp=parseInt($("._point").eq((gameState+1)%2).text());
@@ -524,6 +540,7 @@
 
 
         $("._stop").on("click", function(){
+            if(gameEnd==1) return;
             if(stop==0 && gameState>0){
                 $("._stop").text("START");
                 stop=1;
@@ -542,6 +559,7 @@
           })
           .mouseup(function(){
                 if(gameState==0) return;
+                if(gameEnd==1) return;
                 var p=parseInt($(this).text());
                 var tp=parseInt($("._point").eq((gameState+1)%2).text());
                 $("._point").eq((gameState+1)%2).text(p+tp);

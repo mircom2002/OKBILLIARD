@@ -48,7 +48,6 @@ class MainController < ApplicationController
     o.name = params[:name]
     o.phoneNum = params[:phone]
     o.point = params[:point]
-    o.image = params[:photo]
     o.average=0.00
     o.allscore=0
     o.allinning=0

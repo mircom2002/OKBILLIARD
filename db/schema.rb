@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 20151226151516) do
     t.string   "name"
     t.string   "phoneNum"
     t.integer  "point"
-    t.string   "image"
+    t.string   "my_image"
     t.float    "average"
     t.integer  "allscore"
     t.integer  "allinning"
