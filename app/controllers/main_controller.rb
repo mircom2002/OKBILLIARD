@@ -129,4 +129,11 @@ class MainController < ApplicationController
 
   def dashboard
   end
+
+  def odelete
+    id=params[:idn]
+    Okdb.where("id = ?", id).take.destroy
+    redirect_to :action => 'setup'
+  end
+
 end

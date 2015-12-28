@@ -4,7 +4,7 @@
 
     <style>
         body{
-                background-image: url("https://s3-ap-northeast-1.amazonaws.com/okphoto/background/grad_pastel2.jpg?X-Amz-Date=20151228T152006Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=d2dc7e211b892fbade4d1e91dcef4e6ac0914d444dc1dc606b5274f5c1d2f98e&X-Amz-Credential=ASIAIWLBX5EZFD5TDFEA/20151228/ap-northeast-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=AQoDYXdzEI///////////wEakALYXqdGhjZ2%2BdC9e8XQa%2BOzyyn%2BjfnVdRo%2BMFS/vW92eX2g1YjqwTS8sNRCAZRTL%2BOB9004y3zVymYEn%2BqeXu9dTxOV5h8eQs7qYkhwcVUPVy5FVICPV7VWaJ%2BG0vmcEFEzGI8pPARIc6UDt/x86veo3KbDWcS1O4HVGMpQrWb/GkkYMrVPV5fXYy72tCiRF0pT8aO3b6aJqKMU0Ard85Ufu3hcoHR7ftv35cEs6MVQonUyewOuD7VQDrU/uU/Jo2q68WL7KlrrnAnu/QhQkJ2kVIU1cofsqpJjPnX21GYUcyiILZGq/FDgdLLzHhkvRxZuyNbhPRS2Tp5GEmQKGuyMqYnHrc2WH0VHI98s13XqliCuzoS0BQ%3D%3D");
+                background-image: url("/assets/grad_pastel2.jpg");
                 background-repeat:no-repeat;
                 background-size: 100% 100%;
             }
@@ -39,8 +39,11 @@
                             <td>Avg.</td>
                             <td>총다마</td>
                             <td>경기수</td>
+                            <td></td>
                         </tr>
                     <% Okdb.all.each do |t| %>
+                        <form action="/main/odelete" method="delete">
+                        <input type="text" readonly hidden value="<%=t.id %>" name="idn">
                         <tr>
                             <td><%=t.name %></td>
                             <td><%=t.phoneNum%></td>
@@ -48,7 +51,9 @@
                             <td><%=t.average.to_f.round(2)%></td>
                             <td><%=t.allscore%></td>
                             <td><%=t.count%></td>
+                            <td><input type="submit" value="remove"></td>
                         </tr>
+                        </form>
                     <% end %>
                     <tr class="adduser"></tr>
                     </table>
@@ -68,6 +73,7 @@
                         <h4 class="modal-title">Join<br></h4>
                     </div>
                     <div class="modal-body">
+
                         <form class="form-horizontal" role="form" enctype="multipart/form-data" method="post">
                             <div class="form-group">
                                 <div class="col-md-12">
@@ -112,10 +118,11 @@
             url: "/main/join",
             dataType:"json",
             success: function(res){
-                $(".adduser").before("<tr><td>"+_name+"</td>"+"<td>"+_phone+"</td>"+"<td>"+_point+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"</tr>");
+                $(".adduser").before("<tr><td>"+_name+"</td>"+"<td>"+_phone+"</td>"+"<td>"+_point+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>"+0+"</td>"+"<td>New!</td>"+"</tr>");
                 $("#point").val("");
                 $("#name").val("");
                 $("#phone").val("");
+
 
             }
         });
